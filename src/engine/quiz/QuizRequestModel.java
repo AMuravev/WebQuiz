@@ -5,16 +5,20 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.List;
 
 public class QuizRequestModel {
+    private long id;
     private String title;
     private String text;
     private List<String> options;
-    private int correctAnswer;
+    private int answer;
 
-    QuizRequestModel(String title, String text, List<String> options, int correctAnswer) {
+    QuizRequestModel() {}
+
+    QuizRequestModel(long id, String title, String text, List<String> options, int answer) {
+        this.id = id;
         this.title = title;
         this.text = text;
         this.options = options;
-        this.correctAnswer = correctAnswer;
+        this.answer = answer;
     }
 
     public String getTitle() {
@@ -42,11 +46,19 @@ public class QuizRequestModel {
     }
 
     @JsonIgnore
-    public int getCorrectAnswer() {
-        return correctAnswer;
+    public int getAnswer() {
+        return answer;
     }
 
-    public void setCorrectAnswer(int correctAnswer) {
-        this.correctAnswer = correctAnswer;
+    public void setAnswer(int correctAnswer) {
+        this.answer = correctAnswer;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }
