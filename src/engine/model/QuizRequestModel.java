@@ -1,17 +1,23 @@
 package engine.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonView;
 
 import java.util.List;
 
 public class QuizRequestModel {
+    @JsonView(ViewModel.Public.class)
     private long id;
+    @JsonView(ViewModel.Public.class)
     private String title;
+    @JsonView(ViewModel.Public.class)
     private String text;
+    @JsonView(ViewModel.Public.class)
     private List<String> options;
+    @JsonView(ViewModel.Internal.class)
     private int answer;
 
-    public QuizRequestModel() {}
+    public QuizRequestModel() {
+    }
 
     public QuizRequestModel(long id, String title, String text, List<String> options, int answer) {
         this.id = id;
@@ -45,7 +51,6 @@ public class QuizRequestModel {
         this.options = options;
     }
 
-    @JsonIgnore
     public int getAnswer() {
         return answer;
     }

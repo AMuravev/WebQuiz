@@ -1,5 +1,6 @@
 package engine.controller;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import engine.model.*;
 import engine.repository.QuizRepository;
 import engine.service.QuizCheckService;
@@ -24,6 +25,7 @@ public class QuizController {
     private QuizCheckService quizCheckService;
 
     @GetMapping("/{id}")
+    @JsonView(ViewModel.Public.class)
     public ResponseEntity<QuizRequestModel> get(@PathVariable("id") int id) {
         QuizRequestModel quiz = quizRepository.find(id);
 
@@ -34,10 +36,11 @@ public class QuizController {
         final HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.APPLICATION_JSON);
 
-        return new ResponseEntity<>(quizRepository.find(id), httpHeaders, HttpStatus.OK);
+        return new ResponseEntity<>((QuizRequestModel) quizRepository.find(id), httpHeaders, HttpStatus.OK);
     }
 
     @GetMapping
+    @JsonView(ViewModel.Public.class)
     public ResponseEntity<List<QuizRequestModel>> getAll() {
 
         final HttpHeaders httpHeaders = new HttpHeaders();
@@ -47,11 +50,42 @@ public class QuizController {
     }
 
     @PostMapping(
-            consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
+            consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE},
             produces = {MediaType.APPLICATION_ATOM_XML_VALUE, MediaType.APPLICATION_JSON_VALUE}
     )
-    public ResponseEntity<QuizRequestModel> create(QuizRequestModel quizRequest) {
+    @JsonView(ViewModel.Public.class)
+    public ResponseEntity<QuizRequestModel> createViaUrlencoded(QuizRequestModel quizRequest) {
+        return create(quizRequest);
+    }
 
+    @PostMapping(
+            consumes = {MediaType.APPLICATION_JSON_VALUE},
+            produces = {MediaType.APPLICATION_ATOM_XML_VALUE, MediaType.APPLICATION_JSON_VALUE}
+    )
+    @JsonView(ViewModel.Public.class)
+    public ResponseEntity<QuizRequestModel> createViaJson(@RequestBody QuizRequestModel quizRequest) {
+        return create(quizRequest);
+    }
+
+    @PostMapping(
+            path = "/{id}/solve",
+            consumes = {MediaType.APPLICATION_JSON_VALUE},
+            produces = {MediaType.APPLICATION_ATOM_XML_VALUE, MediaType.APPLICATION_JSON_VALUE}
+    )
+    public ResponseEntity<MessageResponseModel> solveQuizViaJson(@PathVariable("id") int id, @RequestBody AnswerRequestModel answerRequest) {
+        return solveQuiz(id, answerRequest);
+    }
+
+    @PostMapping(
+            path = "/{id}/solve",
+            consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE},
+            produces = {MediaType.APPLICATION_ATOM_XML_VALUE, MediaType.APPLICATION_JSON_VALUE}
+    )
+    public ResponseEntity<MessageResponseModel> solveQuizViaUrlencoded(@PathVariable("id") int id, AnswerRequestModel answerRequest) {
+        return solveQuiz(id, answerRequest);
+    }
+
+    private ResponseEntity<QuizRequestModel> create(QuizRequestModel quizRequest) {
         QuizRequestModel quiz = quizRepository.create(quizRequest);
 
         if (quiz == null) {
@@ -64,13 +98,7 @@ public class QuizController {
         return new ResponseEntity<>(quiz, httpHeaders, HttpStatus.OK);
     }
 
-    @PostMapping(
-            path = "/{id}/solve",
-            consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
-            produces = {MediaType.APPLICATION_ATOM_XML_VALUE, MediaType.APPLICATION_JSON_VALUE}
-    )
-    public ResponseEntity<MessageResponseModel> solveQuiz(@PathVariable("id") int id, AnswerRequestModel answerRequest) {
-
+    private ResponseEntity<MessageResponseModel> solveQuiz(int id, AnswerRequestModel answerRequest) {
         QuizRequestModel quiz = quizRepository.find(id);
 
         if (quiz == null) {
