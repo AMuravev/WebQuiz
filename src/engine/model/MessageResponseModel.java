@@ -1,12 +1,12 @@
-package engine.quiz;
+package engine.model;
 
-public class AnswerResponseModel {
+public class MessageResponseModel {
     private final boolean success;
     private final String feedback;
 
-    public AnswerResponseModel(boolean success) {
+    public MessageResponseModel(boolean success, String feedback) {
         this.success = success;
-        this.feedback = success ? "Congratulations, you're right!" : "Wrong answer! Please, try again.";
+        this.feedback = feedback;
     }
 
     public boolean isSuccess() {

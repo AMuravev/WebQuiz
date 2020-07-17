@@ -1,4 +1,4 @@
-package engine.quiz;
+package engine.model;
 
 public class AnswerRequestModel {
     private int answer;

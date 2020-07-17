@@ -1,4 +1,4 @@
-package engine.quiz;
+package engine.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -11,9 +11,9 @@ public class QuizRequestModel {
     private List<String> options;
     private int answer;
 
-    QuizRequestModel() {}
+    public QuizRequestModel() {}
 
-    QuizRequestModel(long id, String title, String text, List<String> options, int answer) {
+    public QuizRequestModel(long id, String title, String text, List<String> options, int answer) {
         this.id = id;
         this.title = title;
         this.text = text;
