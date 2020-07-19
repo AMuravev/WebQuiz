@@ -5,12 +5,20 @@ import engine.model.*;
 import engine.repository.QuizRepository;
 import engine.service.QuizCheckService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.Errors;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.ConstraintViolationException;
+import javax.validation.Valid;
+import javax.validation.Validator;
+import java.util.HashMap;
 import java.util.List;
 
 
@@ -23,6 +31,10 @@ public class QuizController {
 
     @Autowired
     private QuizCheckService quizCheckService;
+
+    //todo
+    @Autowired
+    Validator validator;
 
     @GetMapping("/{id}")
     @JsonView(ViewModel.Public.class)
@@ -54,7 +66,7 @@ public class QuizController {
             produces = {MediaType.APPLICATION_ATOM_XML_VALUE, MediaType.APPLICATION_JSON_VALUE}
     )
     @JsonView(ViewModel.Public.class)
-    public ResponseEntity<QuizRequestModel> createViaUrlencoded(QuizRequestModel quizRequest) {
+    public ResponseEntity<QuizRequestModel> createViaUrlencoded(@Valid QuizRequestModel quizRequest) {
         return create(quizRequest);
     }
 
@@ -63,7 +75,7 @@ public class QuizController {
             produces = {MediaType.APPLICATION_ATOM_XML_VALUE, MediaType.APPLICATION_JSON_VALUE}
     )
     @JsonView(ViewModel.Public.class)
-    public ResponseEntity<QuizRequestModel> createViaJson(@RequestBody QuizRequestModel quizRequest) {
+    public ResponseEntity<QuizRequestModel> createViaJson(@Valid @RequestBody QuizRequestModel quizRequest) {
         return create(quizRequest);
     }
 

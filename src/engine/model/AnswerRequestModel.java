@@ -1,13 +1,15 @@
 package engine.model;
 
-public class AnswerRequestModel {
-    private int answer;
+import java.util.List;
 
-    public int getAnswer() {
+public class AnswerRequestModel {
+    private List<Integer> answer = null;
+
+    public List<Integer> getAnswer() {
         return answer;
     }
 
-    public void setAnswer(int answer) {
+    public void setAnswer(List<Integer> answer) {
         this.answer = answer;
     }
 }
