@@ -1,12 +1,11 @@
 package engine.controller;
 
-import org.springframework.core.Ordered;
-import org.springframework.core.annotation.Order;
+import engine.exception.ResourceNotFoundException;
+import engine.model.MessageResponseModel;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.ConstraintViolationException;
-import java.util.HashMap;
 
 @ControllerAdvice
 public class ExceptionHandlerController {
@@ -19,4 +18,10 @@ public class ExceptionHandlerController {
 //        response.put("error", "e.getClass().getSimpleName()");
 //        return response;
 //    }
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<?> resourceNotFoundException(ResourceNotFoundException ex) {
+        return new ResponseEntity<>(new MessageResponseModel(false, ex.getMessage()), HttpStatus.NOT_FOUND);
+    }
+
 }

@@ -1,15 +1,12 @@
 package engine.model;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.List;
 
-public class AnswerRequestModel {
-    private List<Integer> answer = null;
-
-    public List<Integer> getAnswer() {
-        return answer;
-    }
-
-    public void setAnswer(List<Integer> answer) {
-        this.answer = answer;
-    }
+@Getter
+@Setter
+public class AnswerRequestModel implements AnswerList {
+    private List<Integer> answer;
 }
