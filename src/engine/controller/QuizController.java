@@ -1,6 +1,8 @@
 package engine.controller;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import engine.Utils.DTO;
+import engine.Utils.DTOModelMapper;
 import engine.entiry.Quiz;
 import engine.exception.ResourceNotFoundException;
 import engine.model.*;
@@ -28,9 +30,8 @@ public class QuizController {
     @Autowired
     private QuizService quizService;
 
-    //todo
     @Autowired
-    Validator validator;
+    private DTOModelMapper dtoModelMapper;
 
     @GetMapping("/{id}")
     @JsonView(ViewModel.Public.class)
@@ -51,8 +52,8 @@ public class QuizController {
             consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE},
             produces = {MediaType.APPLICATION_ATOM_XML_VALUE, MediaType.APPLICATION_JSON_VALUE}
     )
-    @JsonView(ViewModel.Public.class)
-    public ResponseEntity<Quiz> createViaUrlencoded(@Valid Quiz quizRequest) {
+//    @JsonView(ViewModel.Public.class)
+    public ResponseEntity<QuizViewDTO> createViaUrlencoded(@Valid QuizCreateDTO quizRequest) {
         return create(quizRequest);
     }
 
@@ -60,8 +61,8 @@ public class QuizController {
             consumes = {MediaType.APPLICATION_JSON_VALUE},
             produces = {MediaType.APPLICATION_ATOM_XML_VALUE, MediaType.APPLICATION_JSON_VALUE}
     )
-    @JsonView(ViewModel.Public.class)
-    public ResponseEntity<Quiz> createViaJson(@Valid @RequestBody Quiz quizRequest) {
+//    @JsonView(ViewModel.Public.class)
+    public ResponseEntity<QuizViewDTO> createViaJson(@RequestBody @Valid QuizCreateDTO quizRequest) {
         return create(quizRequest);
     }
 
@@ -83,8 +84,9 @@ public class QuizController {
         return solveQuiz(id, answerRequest);
     }
 
-    private ResponseEntity<Quiz> create(Quiz quizRequest) {
-        Quiz quiz = quizService.save(quizRequest);
+    private ResponseEntity<QuizViewDTO> create(QuizCreateDTO quizRequest) {
+
+        QuizViewDTO quiz = quizService.save(quizRequest);
 
         final HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.APPLICATION_JSON);

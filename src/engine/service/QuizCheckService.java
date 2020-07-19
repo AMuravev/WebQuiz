@@ -3,9 +3,11 @@ package engine.service;
 import engine.Utils.ListUtils;
 import engine.model.AnswerList;
 import engine.model.MessageResponseModel;
+import org.springframework.stereotype.Service;
 
 import java.util.*;
 
+@Service
 public class QuizCheckService {
 
     MessageResponseModel error = new MessageResponseModel(false, "Wrong answer! Please, try again.");
