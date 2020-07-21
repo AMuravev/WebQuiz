@@ -3,6 +3,7 @@ package engine.controller;
 import com.fasterxml.jackson.annotation.JsonView;
 import engine.Utils.DTO;
 import engine.Utils.DTOModelMapper;
+import engine.Utils.OutputDTO;
 import engine.entiry.Quiz;
 import engine.exception.ResourceNotFoundException;
 import engine.model.*;
@@ -30,11 +31,8 @@ public class QuizController {
     @Autowired
     private QuizService quizService;
 
-    @Autowired
-    private DTOModelMapper dtoModelMapper;
-
     @GetMapping("/{id}")
-    @JsonView(ViewModel.Public.class)
+    @OutputDTO(QuizViewDTO.class)
     public ResponseEntity<Quiz> get(@PathVariable("id") long id) throws ResourceNotFoundException {
 
         Quiz quiz = quizService.findById(id).orElseThrow(() -> new ResourceNotFoundException("Quiz not found"));
@@ -43,7 +41,7 @@ public class QuizController {
     }
 
     @GetMapping
-    @JsonView(ViewModel.Public.class)
+    @OutputDTO(value = QuizViewDTO.class, list = true)
     public ResponseEntity<List<Quiz>> getAll() {
         return ResponseEntity.ok().body(quizService.findAll());
     }
@@ -52,8 +50,7 @@ public class QuizController {
             consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE},
             produces = {MediaType.APPLICATION_ATOM_XML_VALUE, MediaType.APPLICATION_JSON_VALUE}
     )
-//    @JsonView(ViewModel.Public.class)
-    public ResponseEntity<QuizViewDTO> createViaUrlencoded(@Valid QuizCreateDTO quizRequest) {
+    public ResponseEntity<Quiz> createViaUrlencoded(@RequestParam Quiz quizRequest) {
         return create(quizRequest);
     }
 
@@ -61,8 +58,8 @@ public class QuizController {
             consumes = {MediaType.APPLICATION_JSON_VALUE},
             produces = {MediaType.APPLICATION_ATOM_XML_VALUE, MediaType.APPLICATION_JSON_VALUE}
     )
-//    @JsonView(ViewModel.Public.class)
-    public ResponseEntity<QuizViewDTO> createViaJson(@RequestBody @Valid QuizCreateDTO quizRequest) {
+    @OutputDTO(QuizViewDTO.class)
+    public ResponseEntity<Quiz> createViaJson(@DTO(QuizCreateDTO.class) Quiz quizRequest) {
         return create(quizRequest);
     }
 
@@ -84,9 +81,9 @@ public class QuizController {
         return solveQuiz(id, answerRequest);
     }
 
-    private ResponseEntity<QuizViewDTO> create(QuizCreateDTO quizRequest) {
+    private ResponseEntity<Quiz> create(Quiz quizRequest) {
 
-        QuizViewDTO quiz = quizService.save(quizRequest);
+        Quiz quiz = quizService.save(quizRequest);
 
         final HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.APPLICATION_JSON);

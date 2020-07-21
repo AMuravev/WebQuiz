@@ -1,8 +1,6 @@
 package engine.entiry;
 
-import com.fasterxml.jackson.annotation.*;
 import engine.model.AnswerList;
-import engine.model.ViewModel;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,25 +18,20 @@ public class Quiz implements AnswerList {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-//    @JsonView(ViewModel.Public.class)
     private long id;
 
     @NotBlank(message = "Title is required")
-//    @JsonView(ViewModel.Public.class)
     private String title;
 
     @NotBlank(message = "Text is required")
-//    @JsonView(ViewModel.Public.class)
     private String text;
 
     @NotNull
     @Size(min = 2)
     @ElementCollection(targetClass = String.class)
-//    @JsonView(ViewModel.Public.class)
     private List<String> options;
 
     @Value("#{T(java.util.Collections).emptyList()}")
     @ElementCollection(targetClass = Integer.class)
-//    @JsonView(ViewModel.Internal.class)
     private List<Integer> answer;
 }

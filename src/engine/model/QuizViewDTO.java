@@ -16,6 +16,5 @@ public class QuizViewDTO {
     private String text;
 
     private List<String> options;
-
-    private List<Integer> answer;
+    
 }

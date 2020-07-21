@@ -17,9 +17,6 @@ public class QuizService implements IQuizService {
     @Autowired
     private QuizRepository quizRepository;
 
-    @Autowired
-    private ModelMapper modelMapper;
-
     @Override
     public Optional<Quiz> findById(long id) {
         return quizRepository.findById(id);
@@ -31,12 +28,13 @@ public class QuizService implements IQuizService {
     }
 
     @Override
-    public QuizViewDTO save(QuizCreateDTO quizCreateDTO) {
+    public Quiz save(Quiz quizCreateDTO) {
 
-        Quiz quiz = modelMapper.map(quizCreateDTO, Quiz.class);
+        //Quiz quiz = modelMapper.map(quizCreateDTO, Quiz.class);
 
-        quiz = quizRepository.save(quiz);
+        Quiz quiz = quizRepository.save(quizCreateDTO);
 
-        return modelMapper.map(quiz, QuizViewDTO.class);
+//        return modelMapper.map(quiz, QuizViewDTO.class);
+        return quiz;
     }
 }

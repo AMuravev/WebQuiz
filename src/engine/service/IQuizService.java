@@ -13,5 +13,5 @@ public interface IQuizService {
 
     List<Quiz> findAll();
 
-    QuizViewDTO save(QuizCreateDTO quiz);
+    Quiz save(Quiz quiz);
 }
