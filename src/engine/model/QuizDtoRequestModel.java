@@ -11,7 +11,7 @@ import java.util.List;
 
 @Getter
 @Setter
-public class QuizCreateDTO {
+public class QuizDtoRequestModel {
 
     @NotBlank(message = "Title is required")
     private String title;

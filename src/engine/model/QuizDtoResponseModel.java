@@ -7,7 +7,7 @@ import java.util.List;
 
 @Getter
 @Setter
-public class QuizViewDTO {
+public class QuizDtoResponseModel {
 
     private long id;
 

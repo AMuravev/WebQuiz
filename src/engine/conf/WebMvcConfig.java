@@ -3,6 +3,7 @@ package engine.conf;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import engine.Utils.DTOModelMapper;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Configuration;
@@ -18,29 +19,18 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     private final ApplicationContext applicationContext;
     private final EntityManager entityManager;
+    private final ModelMapper modelMapper;
 
     @Autowired
-    public WebMvcConfig(ApplicationContext applicationContext, EntityManager entityManager) {
+    public WebMvcConfig(ApplicationContext applicationContext, EntityManager entityManager, ModelMapper modelMapper) {
         this.applicationContext = applicationContext;
         this.entityManager = entityManager;
+        this.modelMapper = modelMapper;
     }
 
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
         ObjectMapper objectMapper = Jackson2ObjectMapperBuilder.json().applicationContext(this.applicationContext).build();
-        argumentResolvers.add(new DTOModelMapper(objectMapper));
+        argumentResolvers.add(new DTOModelMapper(objectMapper, modelMapper));
     }
-
-//    @Override
-//    public void addInterceptors(InterceptorRegistry registry) {
-//        registry.addInterceptor(new RequestDTOResolver());
-//    }
-
-//    @Override
-//    public void extendMessageConverters(List<HttpMessageConverter<?>> converters) {
-//        QuizEntityConverter quizEntityConverter = new QuizEntityConverter();
-//        MediaType mediaType = new MediaType("application","x-www-form-urlencoded", StandardCharsets.UTF_8);
-//        quizEntityConverter.setSupportedMediaTypes(Collections.singletonList(mediaType));
-//        converters.add(quizEntityConverter);
-//    }
 }

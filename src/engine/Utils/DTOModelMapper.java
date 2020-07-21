@@ -1,8 +1,8 @@
 package engine.Utils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import engine.annotation.RequestDto;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.MethodParameter;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.http.HttpInputMessage;
@@ -24,17 +24,18 @@ import java.util.Collections;
 
 @Component
 public class DTOModelMapper extends RequestResponseBodyMethodProcessor {
-    private static final ModelMapper modelMapper = new ModelMapper();
+    private ModelMapper modelMapper;
 
     private EntityManager entityManager;
 
-    public DTOModelMapper(ObjectMapper objectMapper) {
+    public DTOModelMapper(ObjectMapper objectMapper, ModelMapper modelMapper) {
         super(Collections.singletonList(new MappingJackson2HttpMessageConverter(objectMapper)));
+        this.modelMapper = modelMapper;
     }
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
-        return parameter.hasParameterAnnotation(DTO.class);
+        return parameter.hasParameterAnnotation(RequestDto.class);
     }
 
     @Override
@@ -51,7 +52,7 @@ public class DTOModelMapper extends RequestResponseBodyMethodProcessor {
     @Override
     protected Object readWithMessageConverters(HttpInputMessage inputMessage, MethodParameter parameter, Type targetType) throws IOException, HttpMediaTypeNotSupportedException, HttpMessageNotReadableException {
         for (Annotation ann : parameter.getParameterAnnotations()) {
-            DTO dtoType = AnnotationUtils.getAnnotation(ann, DTO.class);
+            RequestDto dtoType = AnnotationUtils.getAnnotation(ann, RequestDto.class);
             if (dtoType != null) {
                 return super.readWithMessageConverters(inputMessage, parameter, dtoType.value());
             }

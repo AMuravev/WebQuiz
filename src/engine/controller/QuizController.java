@@ -1,9 +1,7 @@
 package engine.controller;
 
-import com.fasterxml.jackson.annotation.JsonView;
-import engine.Utils.DTO;
-import engine.Utils.DTOModelMapper;
-import engine.Utils.OutputDTO;
+import engine.annotation.ResponseDto;
+import engine.annotation.RequestDto;
 import engine.entiry.Quiz;
 import engine.exception.ResourceNotFoundException;
 import engine.model.*;
@@ -15,9 +13,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
-import javax.validation.Validator;
 import java.util.List;
 
 
@@ -32,7 +27,7 @@ public class QuizController {
     private QuizService quizService;
 
     @GetMapping("/{id}")
-    @OutputDTO(QuizViewDTO.class)
+    @ResponseDto(QuizDtoResponseModel.class)
     public ResponseEntity<Quiz> get(@PathVariable("id") long id) throws ResourceNotFoundException {
 
         Quiz quiz = quizService.findById(id).orElseThrow(() -> new ResourceNotFoundException("Quiz not found"));
@@ -41,7 +36,7 @@ public class QuizController {
     }
 
     @GetMapping
-    @OutputDTO(value = QuizViewDTO.class, list = true)
+    @ResponseDto(value = QuizDtoResponseModel.class, list = true)
     public ResponseEntity<List<Quiz>> getAll() {
         return ResponseEntity.ok().body(quizService.findAll());
     }
@@ -50,7 +45,8 @@ public class QuizController {
             consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE},
             produces = {MediaType.APPLICATION_ATOM_XML_VALUE, MediaType.APPLICATION_JSON_VALUE}
     )
-    public ResponseEntity<Quiz> createViaUrlencoded(@RequestParam Quiz quizRequest) {
+    @ResponseDto(QuizDtoResponseModel.class)
+    public ResponseEntity<Quiz> createViaUrlencoded(Quiz quizRequest) {
         return create(quizRequest);
     }
 
@@ -58,8 +54,8 @@ public class QuizController {
             consumes = {MediaType.APPLICATION_JSON_VALUE},
             produces = {MediaType.APPLICATION_ATOM_XML_VALUE, MediaType.APPLICATION_JSON_VALUE}
     )
-    @OutputDTO(QuizViewDTO.class)
-    public ResponseEntity<Quiz> createViaJson(@DTO(QuizCreateDTO.class) Quiz quizRequest) {
+    @ResponseDto(QuizDtoResponseModel.class)
+    public ResponseEntity<Quiz> createViaJson(@RequestDto(QuizDtoRequestModel.class) Quiz quizRequest) {
         return create(quizRequest);
     }
 
