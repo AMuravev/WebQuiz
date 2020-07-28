@@ -34,4 +34,8 @@ public class Quiz implements AnswerList {
     @Value("#{T(java.util.Collections).emptyList()}")
     @ElementCollection(targetClass = Integer.class)
     private List<Integer> answer;
+
+    @ManyToOne
+    @JoinColumn(name = "UserID")
+    private User user;
 }

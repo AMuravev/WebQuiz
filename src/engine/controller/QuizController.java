@@ -12,7 +12,9 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 
@@ -46,8 +48,8 @@ public class QuizController {
             produces = {MediaType.APPLICATION_ATOM_XML_VALUE, MediaType.APPLICATION_JSON_VALUE}
     )
     @ResponseDto(QuizDtoResponseModel.class)
-    public ResponseEntity<Quiz> createViaUrlencoded(Quiz quizRequest) {
-        return create(quizRequest);
+    public ResponseEntity<Quiz> createViaUrlencoded(Quiz quiz) {
+        return create(quiz);
     }
 
     @PostMapping(
@@ -55,8 +57,8 @@ public class QuizController {
             produces = {MediaType.APPLICATION_ATOM_XML_VALUE, MediaType.APPLICATION_JSON_VALUE}
     )
     @ResponseDto(QuizDtoResponseModel.class)
-    public ResponseEntity<Quiz> createViaJson(@RequestDto(QuizDtoRequestModel.class) Quiz quizRequest) {
-        return create(quizRequest);
+    public ResponseEntity<Quiz> createViaJson(@RequestDto(QuizDtoRequestModel.class) Quiz quiz) {
+        return create(quiz);
     }
 
     @PostMapping(
@@ -75,6 +77,13 @@ public class QuizController {
     )
     public ResponseEntity<MessageResponseModel> solveQuizViaUrlencoded(@PathVariable("id") long id, AnswerRequestModel answerRequest) throws ResourceNotFoundException {
         return solveQuiz(id, answerRequest);
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public ResponseEntity<Void> deleteQuiz(@PathVariable("id") long id) throws ResourceNotFoundException {
+        quizService.delete(id);
+        return null;
     }
 
     private ResponseEntity<Quiz> create(Quiz quizRequest) {
