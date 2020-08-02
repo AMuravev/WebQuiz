@@ -5,6 +5,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.MethodParameter;
 import org.springframework.core.annotation.AnnotationUtils;
+import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.server.ServerHttpRequest;
@@ -14,6 +15,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
 import java.lang.annotation.Annotation;
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @ControllerAdvice
@@ -35,12 +37,13 @@ public class RequestBodyAdviceController implements ResponseBodyAdvice<Object> {
 
             if (dtoType != null) {
 
-                if (dtoType.list() && body instanceof List<?>) {
+                if (dtoType.list() && body instanceof Page<?>) {
+                    return ((Page<?>) body).map((Function<Object, Object>) o -> modelMapper.map(o, dtoType.value()));
+                } else if (dtoType.list() && body instanceof List<?>) {
                     return mapList((List<?>) body, dtoType.value());
                 } else {
                     return modelMapper.map(body, dtoType.value());
                 }
-
             }
         }
         throw new RuntimeException();
