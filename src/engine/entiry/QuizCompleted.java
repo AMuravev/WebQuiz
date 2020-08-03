@@ -20,11 +20,10 @@ public class QuizCompleted {
     @JoinColumn(name = "userID")
     private User user;
 
-    @ManyToOne
-    @JoinColumn(name = "quizID")
-    private Quiz quiz;
+    @Column(name = "quizID")
+    private long quiz;
 
     @CreationTimestamp
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date completedAt;
 }

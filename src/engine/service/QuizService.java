@@ -51,7 +51,7 @@ public class QuizService implements IQuizService {
         User user = userService.getCurrentAuthUser();
         Quiz quiz = quizRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Quiz not found"));
 
-        if (quiz.getUser().equals(user)) {
+        if (quiz.getUser() != null && quiz.getUser().equals(user)) {
             quizRepository.delete(quiz);
         } else {
             throw new AccessDeniedException("Authentication error");

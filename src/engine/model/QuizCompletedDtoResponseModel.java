@@ -18,7 +18,7 @@ public class QuizCompletedDtoResponseModel {
 
     private Date completedAt;
 
-    public void setQuiz(Quiz quiz) {
-        this.quiz = quiz.getId();
-    }
+//    public void setQuiz(Quiz quiz) {
+//        this.quiz = quiz.getId();
+//    }
 }
