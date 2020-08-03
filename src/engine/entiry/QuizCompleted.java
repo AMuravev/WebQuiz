@@ -23,6 +23,10 @@ public class QuizCompleted {
     @Column(name = "quizID")
     private long quiz;
 
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "taskID", nullable = false)
+//    private Quiz quiz;
+
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     private Date completedAt;
